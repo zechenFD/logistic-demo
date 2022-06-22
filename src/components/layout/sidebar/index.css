@@ -1,0 +1,22 @@
+.logistic-sidebar.ant-menu{
+    font-size: 18px;
+}
+
+.ant-layout-sider .logo {
+    height: 32px;
+    margin: 16px;
+}
+
+.ant-layout-sider .logo {
+    height: 32px;
+    margin: 16px;
+}
+
+.ant-layout-sider .ant-menu-item .anticon
+{
+    margin-right: 8px;
+    font-size: 16px;
+}
+.logistic-sidebar.ant-menu-dark.ant-menu-dark:not(.ant-menu-horizontal) .ant-menu-item-selected{
+    background-color: #298321;
+}
