@@ -1,4 +1,4 @@
-import {BasicTable} from '../../components/tables/table.js';
+import BasicTable from '../../components/tables/table';
 
 const HomePage = () => {
 
