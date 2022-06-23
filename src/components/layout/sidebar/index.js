@@ -1,14 +1,31 @@
-import { Link } from "react-router-dom";
+import React from 'react';
+import { Link, useLocation } from "react-router-dom";
 import {
+    HomeOutlined,
     ProjectOutlined,
     TeamOutlined,
     ForkOutlined,
 } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
-import React from 'react';
-import './index.css';
+import './index.less';
+
+const menu = [{
+    key: '1',
+    path: '/'
+}, {
+    key: '2',
+    path: '/scheduling'
+}, {
+    key: '3',
+    path: '/operations'
+}, {
+    key: '4',
+    path: '/routing'
+}]
 
 const LogisticSidebar = (props) => {
+    const location = useLocation();
+    const currentKey = menu.find(_item => location.pathname === _item.path).key;
     const { collapsed } = props;
 
     return (
@@ -18,30 +35,33 @@ const LogisticSidebar = (props) => {
                 className='logistic-sidebar'
                 theme='dark'
                 mode="inline"
-                defaultSelectedKeys={['1']}
+                defaultSelectedKeys={[currentKey]}
             >
                 <Menu.Item key="1">
                     <Link to='/'>
-                        <ProjectOutlined />
-                        Home
+                        <HomeOutlined />
+                        <span className="sidebar-text">Home</span>
                     </Link>
                 </Menu.Item>
+
                 <Menu.Item key="2">
                     <Link to='/scheduling'>
                         <ProjectOutlined />
-                        Scheduling
+                        <span className="sidebar-text">Scheduling</span>
                     </Link>
                 </Menu.Item>
+
                 <Menu.Item key="3">
                     <Link to='/operations'>
                         <TeamOutlined />
-                        Operations
+                        <span className="sidebar-text">Operations</span>
                     </Link>
                 </Menu.Item>
+
                 <Menu.Item key="4">
                     <Link to='/routing'>
                         <ForkOutlined />
-                        Routing
+                        <span className="sidebar-text">Routing</span>
                     </Link>
                 </Menu.Item>
             </Menu>
