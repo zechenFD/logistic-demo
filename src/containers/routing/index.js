@@ -1,11 +1,14 @@
-import { Table, Tag } from "antd";
+import { Table, Tag, Modal, Input } from "antd";
 import { useEffect, useState } from "react";
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
 const Routing = () => {
   const [loading, setLoading] = useState(false);
   const [dataSource, setDataSource] = useState([]);
   const [pageSize, setpageSize] = useState(8);
-  const [selectedRow, setSelectedRow] = useState([3]);
+  const [selectedRow, setSelectedRow] = useState([]);
+  const [displayModal, setDisplayModal] = useState(false);
+  const [editingRecordRow, setEditingRecordRow] = useState(null);
 
   useEffect(() => {
     setLoading(true);
@@ -60,7 +63,48 @@ const Routing = () => {
         return record.completed === value;
       },
     },
+    {
+      title: "Actions",
+      key: "actions",
+      render: (record) => {
+        return (
+          <>
+            <EditOutlined
+              onClick={() => {
+                onEditingRow(record);
+              }}
+            />
+            <DeleteOutlined
+              onClick={() => {
+                onDeleteRow(record);
+              }}
+              style={{ color: "red", marginLeft: 12 }}
+            />
+          </>
+        );
+      },
+    },
   ];
+  //row deletion
+  const onDeleteRow = (record) => {
+    Modal.confirm({
+      title: "Are you sure to delete the row ?",
+      okText: "Yes",
+      cancelText: "No",
+      okType: "Danger",
+      onOk: () => {
+        setDataSource((pre) => {
+          return pre.filter((eachRecord) => eachRecord.id !== record.id);
+        });
+      },
+    });
+  };
+
+  //editing for a row with modal implementation
+  const onEditingRow = (record) => {
+    setDisplayModal(true);
+    setEditingRecordRow({ ...record });
+  };
 
   return (
     <>
@@ -99,6 +143,48 @@ const Routing = () => {
           ],
         }}
       ></Table>
+      <Modal
+        title="Edit"
+        visible={displayModal}
+        onCancel={() => {
+          setDisplayModal(false);
+        }}
+        onOk={() => {
+          setDataSource((individualRecord) => {
+            return individualRecord.map((record) => {
+              if (record.id === editingRecordRow.id) {
+                return editingRecordRow;
+                console.log("editingRecordRow", editingRecordRow);
+              } else {
+                return record;
+              }
+            });
+          });
+
+          setDisplayModal(false);
+        }}
+        onText="Save"
+      >
+        <Input value={editingRecordRow?.id} disabled />
+        <Input
+          value={editingRecordRow?.title}
+          style={{ marginTop: 10 }}
+          onChange={(e) => {
+            setEditingRecordRow((pre) => {
+              return { ...pre, title: e.target.value };
+            });
+          }}
+        />
+        <Input
+          value={editingRecordRow?.completed}
+          style={{ marginTop: 10 }}
+          onChange={(e) => {
+            setEditingRecordRow((pre) => {
+              return { ...pre, completed: e.target.value };
+            });
+          }}
+        />
+      </Modal>
     </>
   );
 };
