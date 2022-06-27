@@ -111,7 +111,7 @@ const Routing = () => {
                 >
                   <Input
                     style={{ width: 350 }}
-                    size="small"
+                    size="medium"
                     onChange={(e) => {
                       setEditingRecordRow((pre) => {
                         return { ...pre, title: e.target.value };
@@ -132,6 +132,7 @@ const Routing = () => {
                       });
                     });
                     setEditMode(false);
+                    setEditingRecordRow(null);
                   }}
                 >
                   Save
@@ -305,6 +306,7 @@ const Routing = () => {
           });
 
           setDisplayModal(false);
+          setEditingRecordRow(null);
         }}
         onText="Save"
       >
