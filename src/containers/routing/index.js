@@ -1,4 +1,4 @@
-import { Table, Tag, Modal, Input, Button } from "antd";
+import { Table, Tag, Modal, Input, Button, Form } from "antd";
 import { useEffect, useState } from "react";
 import {
   EditOutlined,
@@ -12,6 +12,8 @@ const Routing = () => {
   const [selectedRow, setSelectedRow] = useState([]);
   const [displayModal, setDisplayModal] = useState(false);
   const [editingRecordRow, setEditingRecordRow] = useState(null);
+  const [form] = Form.useForm();
+  const [editMode, setEditMode] = useState(false);
 
   const getTodo = async () => {
     setLoading(true);
@@ -92,6 +94,82 @@ const Routing = () => {
       onFilter: (value, record) => {
         return record.title.toLowerCase().includes(value.toLowerCase());
       },
+      render: (text, record) => {
+        if (record?.id === editingRecordRow?.id && editMode) {
+          return (
+            <>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                {" "}
+                <Form.Item
+                  name="title"
+                  rules={[
+                    {
+                      required: true,
+                      message: "please Enter the title",
+                    },
+                  ]}
+                >
+                  <Input
+                    style={{ width: 350 }}
+                    size="small"
+                    onChange={(e) => {
+                      setEditingRecordRow((pre) => {
+                        return { ...pre, title: e.target.value };
+                      });
+                    }}
+                  ></Input>
+                </Form.Item>
+                <Button
+                  type="link"
+                  onClick={() => {
+                    setDataSource((individualRecord) => {
+                      return individualRecord.map((record) => {
+                        if (record.id === editingRecordRow.id) {
+                          return editingRecordRow;
+                        } else {
+                          return record;
+                        }
+                      });
+                    });
+                    setEditMode(false);
+                  }}
+                >
+                  Save
+                </Button>
+                <Button
+                  type="link"
+                  onClick={() => {
+                    setEditMode(false);
+                  }}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </>
+          );
+        }
+
+        return (
+          <>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              {" "}
+              <p>{text}</p>
+              <Button
+                type="link"
+                onClick={() => {
+                  setEditingRecordRow(record);
+                  form.setFieldsValue({
+                    title: record.title,
+                  });
+                  setEditMode(true);
+                }}
+              >
+                Edit
+              </Button>
+            </div>
+          </>
+        );
+      },
     },
     {
       title: "Completed",
@@ -166,46 +244,49 @@ const Routing = () => {
   return (
     <>
       <h1>Routing Page</h1>
-      <Table
-        loading={loading}
-        dataSource={dataSource}
-        columns={columns}
-        pagination={
-          {
-            //pagination changes and can make API calls
-          }
-        }
-        rowKey="id"
-        rowSelection={{
-          type: "checkbox",
-          selectedRowKeys: selectedRow,
-          onChange: (row) => {
-            setSelectedRow(row);
-          },
-          onSelect: (record) => {
-            console.log("record", record);
-          },
-          selections: [
-            Table.SELECTION_ALL,
-            Table.SELECTION_NONE,
+      <Form form={form}>
+        {" "}
+        <Table
+          loading={loading}
+          dataSource={dataSource}
+          columns={columns}
+          pagination={
             {
-              key: "even",
-              text: "Select Even Rows",
-              onSelect: (allKeys) => {
-                const evenSelectedKeys = allKeys.filter((key) => {
-                  return key % 2 === 0;
-                });
-                setSelectedRow(evenSelectedKeys);
-              },
+              //pagination changes and can make API calls
+            }
+          }
+          rowKey="id"
+          rowSelection={{
+            type: "checkbox",
+            selectedRowKeys: selectedRow,
+            onChange: (row) => {
+              setSelectedRow(row);
             },
-          ],
-        }}
-        expandable={{
-          expandedRowRender: () => {
-            return <p>This is dropdown content</p>;
-          },
-        }}
-      ></Table>
+            onSelect: (record) => {
+              console.log("record", record);
+            },
+            selections: [
+              Table.SELECTION_ALL,
+              Table.SELECTION_NONE,
+              {
+                key: "even",
+                text: "Select Even Rows",
+                onSelect: (allKeys) => {
+                  const evenSelectedKeys = allKeys.filter((key) => {
+                    return key % 2 === 0;
+                  });
+                  setSelectedRow(evenSelectedKeys);
+                },
+              },
+            ],
+          }}
+          expandable={{
+            expandedRowRender: () => {
+              return <p>This is dropdown content</p>;
+            },
+          }}
+        ></Table>
+      </Form>
       <Modal
         title="Edit"
         visible={displayModal}
