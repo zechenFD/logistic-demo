@@ -1,16 +1,19 @@
-import { Table, Tag, Modal, Input } from "antd";
+import { Table, Tag, Modal, Input, Button } from "antd";
 import { useEffect, useState } from "react";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import {
+  EditOutlined,
+  DeleteOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
 
 const Routing = () => {
   const [loading, setLoading] = useState(false);
   const [dataSource, setDataSource] = useState([]);
-  const [pageSize, setpageSize] = useState(8);
   const [selectedRow, setSelectedRow] = useState([]);
   const [displayModal, setDisplayModal] = useState(false);
   const [editingRecordRow, setEditingRecordRow] = useState(null);
 
-  useEffect(() => {
+  const getTodo = async () => {
     setLoading(true);
     fetch("https://jsonplaceholder.typicode.com/todos")
       .then((response) => response.json())
@@ -21,6 +24,10 @@ const Routing = () => {
         console.log(err);
       });
     setLoading(false);
+  };
+
+  useEffect(() => {
+    getTodo();
   }, []);
 
   const columns = [
@@ -35,6 +42,56 @@ const Routing = () => {
       title: "Title",
       dataIndex: "title",
       key: "title",
+      filterDropdown: ({
+        setSelectedKeys,
+        selectedKeys,
+        confirm,
+        clearFilters,
+      }) => {
+        return (
+          <>
+            <Input
+              autoFocus
+              style={{ margin: 10, width: 150 }}
+              placeholder="Enter Search Key"
+              value={selectedKeys[0]}
+              onChange={(e) => {
+                setSelectedKeys(e.target.value ? [e.target.value] : []);
+              }}
+              onPressEnter={() => {
+                confirm();
+              }}
+              onBlur={() => {
+                confirm();
+              }}
+            ></Input>
+            <Button
+              style={{ margin: 10 }}
+              type="primary"
+              onClick={() => {
+                confirm();
+              }}
+            >
+              Search
+            </Button>
+            <Button
+              style={{ margin: 10 }}
+              type="ghost"
+              onClick={() => {
+                clearFilters();
+              }}
+            >
+              Clear
+            </Button>
+          </>
+        );
+      },
+      filterIcon: () => {
+        return <SearchOutlined />;
+      },
+      onFilter: (value, record) => {
+        return record.title.toLowerCase().includes(value.toLowerCase());
+      },
     },
     {
       title: "Completed",
@@ -113,10 +170,11 @@ const Routing = () => {
         loading={loading}
         dataSource={dataSource}
         columns={columns}
-        pagination={{
-          pageSize: pageSize,
-          //pagination changes and can make API calls
-        }}
+        pagination={
+          {
+            //pagination changes and can make API calls
+          }
+        }
         rowKey="id"
         rowSelection={{
           type: "checkbox",
@@ -142,6 +200,11 @@ const Routing = () => {
             },
           ],
         }}
+        expandable={{
+          expandedRowRender: () => {
+            return <p>This is dropdown content</p>;
+          },
+        }}
       ></Table>
       <Modal
         title="Edit"
@@ -154,7 +217,6 @@ const Routing = () => {
             return individualRecord.map((record) => {
               if (record.id === editingRecordRow.id) {
                 return editingRecordRow;
-                console.log("editingRecordRow", editingRecordRow);
               } else {
                 return record;
               }
