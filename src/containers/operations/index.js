@@ -1,8 +1,7 @@
-const Operations = () => {
+import OperationalForms from "../../components/forms/basicform";
 
-    return (
-        <h1>Operations Page</h1>
-    )
-}
+const Operations = () => {
+  return <OperationalForms />;
+};
 
 export default Operations;
