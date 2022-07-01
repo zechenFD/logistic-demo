@@ -1,4 +1,14 @@
-import { Table, Tag, Modal, Input, Button, Form, Space, Select } from "antd";
+import {
+  Table,
+  Tooltip,
+  Tag,
+  Modal,
+  Input,
+  Button,
+  Form,
+  Space,
+  Select,
+} from "antd";
 import { useEffect, useState } from "react";
 import {
   EditOutlined,
@@ -18,6 +28,7 @@ const CrudTable = () => {
   const [form] = Form.useForm();
   const [editMode, setEditMode] = useState(false);
   const { Option } = Select;
+  const [filteredInfo, setFilteredInfo] = useState({});
 
   const getData = () => {
     fetch("data/addresses.json", {
@@ -43,6 +54,13 @@ const CrudTable = () => {
     }, 1200);
   }, []);
 
+  const handleChange = (pagination, filters, sorter) => {
+    setFilteredInfo(filters);
+  };
+
+  const clearFilters = () => {
+    setFilteredInfo({});
+  };
   const columns = [
     {
       title: "Street Address",
@@ -189,8 +207,50 @@ const CrudTable = () => {
       title: "City",
       dataIndex: "city",
       key: "city",
-      width: 150,
-      sorter: true,
+      width: 90,
+      ellipsis: {
+        showTitle: false,
+      },
+      render: (city) => {
+        return (
+          <Tooltip placement="topLeft" title={city}>
+            {city}
+          </Tooltip>
+        );
+      },
+      filteredValue: filteredInfo.city || null,
+      sorter: (a, b) => {
+        return a.city.localeCompare(b.city);
+      },
+      filters: [
+        {
+          text: "Category 1",
+          value: "Category 1",
+          children: [
+            {
+              text: "Brooklyn",
+              value: "Brooklyn",
+            },
+          ],
+        },
+        {
+          text: "Category 2",
+          value: "Category 2",
+          children: [
+            {
+              text: "Bronx",
+              value: "Bronx",
+            },
+            {
+              text: "Long Island City",
+              value: "Long Island City",
+            },
+          ],
+        },
+      ],
+      filterMode: "tree",
+      filterSearch: true,
+      onFilter: (value, record) => record.city.includes(value),
     },
     {
       title: "State",
@@ -234,6 +294,8 @@ const CrudTable = () => {
       onFilter: (value, record) => {
         return record.service_type === value;
       },
+      filterSearch: true,
+      filteredValue: filteredInfo.service_type || null,
     },
 
     {
@@ -241,8 +303,7 @@ const CrudTable = () => {
       dataIndex: "expressEligible",
       key: "expressEligible",
       width: 150,
-      render: (expressEligible, record) => {
-        console.log("expressEligible", expressEligible);
+      render: (expressEligible) => {
         return (
           <Tag color={expressEligible ? "Green" : "Red"}>
             {expressEligible ? "Eligible" : "Not Eligible"}
@@ -268,6 +329,7 @@ const CrudTable = () => {
       onFilter: (value, record) => {
         return record.expressEligible === value;
       },
+      filteredValue: filteredInfo.expressEligible || null,
     },
     {
       title: "Actions",
@@ -314,6 +376,14 @@ const CrudTable = () => {
 
   return (
     <>
+      {" "}
+      <Space
+        style={{
+          marginBottom: 16,
+        }}
+      >
+        <Button onClick={clearFilters}>Clear filters</Button>
+      </Space>
       <Form form={form}>
         {" "}
         <Table
@@ -359,6 +429,7 @@ const CrudTable = () => {
             x: 1400,
             y: 450,
           }}
+          onChange={handleChange}
         ></Table>
       </Form>
       <Modal
@@ -371,7 +442,6 @@ const CrudTable = () => {
           setDataSource((individualRecord) => {
             return individualRecord.map((record) => {
               if (record.id === editingRecordRow.id) {
-                console.log("editingRecordRow", editingRecordRow);
                 return editingRecordRow;
               } else {
                 return record;
@@ -406,7 +476,6 @@ const CrudTable = () => {
             }}
             onChange={(value) => {
               setEditingRecordRow((pre) => {
-                console.log("pre", pre);
                 return { ...pre, service_type: value };
               });
             }}
