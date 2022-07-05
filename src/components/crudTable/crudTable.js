@@ -18,6 +18,7 @@ import {
   ShopOutlined,
   ShoppingCartOutlined,
 } from "@ant-design/icons";
+import axios from "axios";
 
 const CrudTable = () => {
   const [loading, setLoading] = useState(false);
@@ -31,18 +32,13 @@ const CrudTable = () => {
   const [filteredInfo, setFilteredInfo] = useState({});
 
   const getData = () => {
-    fetch("data/addresses.json", {
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setDataSource(data.addresses);
+    axios
+      .get(`data/addresses.json`)
+      .then((response) => {
+        setDataSource(response.data.addresses);
       })
-      .catch((err) => {
-        console.log(err);
+      .catch((error) => {
+        console.log(error);
       });
   };
 
@@ -67,6 +63,7 @@ const CrudTable = () => {
       dataIndex: "street_address",
       key: "street_address",
       width: 500,
+      filteredValue: filteredInfo.street_address || null,
       filterDropdown: ({
         setSelectedKeys,
         selectedKeys,
@@ -207,7 +204,7 @@ const CrudTable = () => {
       title: "City",
       dataIndex: "city",
       key: "city",
-      width: 90,
+      width: 150,
       ellipsis: {
         showTitle: false,
       },
@@ -257,12 +254,14 @@ const CrudTable = () => {
       dataIndex: "state",
       key: "state",
       width: 100,
+      filteredValue: filteredInfo.state || null,
     },
     {
       title: "Zip",
       dataIndex: "zip",
       key: "zip",
       width: 100,
+      filteredValue: filteredInfo.zip || null,
     },
     {
       title: "Service Type",
