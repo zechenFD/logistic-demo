@@ -19,6 +19,7 @@ import {
   ShoppingCartOutlined,
 } from "@ant-design/icons";
 import axios from "axios";
+import API from "../../api";
 
 const CrudTable = () => {
   const [loading, setLoading] = useState(false);
@@ -32,8 +33,7 @@ const CrudTable = () => {
   const [filteredInfo, setFilteredInfo] = useState({});
 
   const getData = () => {
-    axios
-      .get(`data/addresses.json`)
+    API.get(`addresses.json`)
       .then((response) => {
         setDataSource(response.data.addresses);
       })
