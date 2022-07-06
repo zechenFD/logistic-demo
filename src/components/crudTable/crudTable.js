@@ -18,8 +18,8 @@ import {
   ShopOutlined,
   ShoppingCartOutlined,
 } from "@ant-design/icons";
-import axios from "axios";
 import API from "../../api";
+import OperationalForms from "../forms/basicform";
 
 const CrudTable = () => {
   const [loading, setLoading] = useState(false);
@@ -31,11 +31,12 @@ const CrudTable = () => {
   const [editMode, setEditMode] = useState(false);
   const { Option } = Select;
   const [filteredInfo, setFilteredInfo] = useState({});
+  const [addModal, setAddModal] = useState(false);
 
   const getData = () => {
     API.get(`addresses.json`)
       .then((response) => {
-        setDataSource(response.data.addresses);
+        setDataSource(response.data.addresses.slice(0, 15));
       })
       .catch((error) => {
         console.log(error);
@@ -52,6 +53,18 @@ const CrudTable = () => {
 
   const handleChange = (pagination, filters, sorter) => {
     setFilteredInfo(filters);
+  };
+
+  //const [formData, setFormData] = useState([]);
+
+  const addToTable = (values) => {
+    values.id = Math.random();
+    setDataSource([values, ...dataSource]);
+    setAddModal(false);
+  };
+
+  const addAddress = () => {
+    setAddModal(true);
   };
 
   const clearFilters = () => {
@@ -274,7 +287,7 @@ const CrudTable = () => {
           <>
             <Space>
               {" "}
-              <span>{text.toUpperCase()}</span>
+              <span>{text?.toUpperCase()}</span>
               {type}
             </Space>
           </>
@@ -382,6 +395,7 @@ const CrudTable = () => {
         }}
       >
         <Button onClick={clearFilters}>Clear filters</Button>
+        <Button onClick={addAddress}>ADD ADDRESS</Button>
       </Space>
       <Form form={form}>
         {" "}
@@ -483,6 +497,16 @@ const CrudTable = () => {
             <Option value="corporate">Corporate</Option>
           </Select>
         </Space>
+      </Modal>
+      <Modal
+        title="Add Address"
+        visible={addModal}
+        footer={null}
+        onCancel={() => {
+          setAddModal(false);
+        }}
+      >
+        <OperationalForms addToTable={addToTable} />
       </Modal>
     </>
   );
