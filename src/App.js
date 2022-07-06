@@ -20,6 +20,7 @@ const { Content } = Layout;
 
 const App = () => {
     const [collapsed, setCollapsed] = useState(false);
+    
     const handleHeaderEvent = (collaspedStatus) => {
         setCollapsed(collaspedStatus)
     }

@@ -123,10 +123,15 @@ module.exports = function (webpackEnv) {
       {
         loader: require.resolve('less-loader'),
         options: {
-          lessOptions: {
-            javascriptEnabled: true
-          }
-        }
+          lessOptions: { // If you are using less-loader@5 please spread the lessOptions to options directly
+            // modifyVars: {
+            //   'primary-color': '#1DA57A',
+            //   'link-color': '#1DA57A',
+            //   'border-radius-base': '2px',
+            // },
+            javascriptEnabled: true,
+          },
+        },
       },
       {
         // Options for PostCSS as we reference these options twice

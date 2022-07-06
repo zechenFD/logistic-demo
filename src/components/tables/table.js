@@ -4,7 +4,6 @@ import { Form, InputNumber, Popconfirm, Typography } from 'antd';
 
 import { useRef, useState } from 'react';
 import Highlighter from 'react-highlight-words';
-import { mockTabkeData } from './mock_table_data'
 
 import './table.less';
 
@@ -43,61 +42,25 @@ const EditableCell = ({
   );
 };
 
-const BasicTable = () => {
+const BasicTable = (props) => {
+  const { tableData, addData, editData } = props;
   const [form] = Form.useForm();
-  const [data, setData] = useState(mockTabkeData);
-  const [editingKey, setEditingKey] = useState('');
 
+  const [data, setData] = useState(tableData);
+  const [editingKey, setEditingKey] = useState('');
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const [filteredInfo, setFilteredInfo] = useState({});
   const [sortedInfo, setSortedInfo] = useState({});
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [count, setCount] = useState(data.length);
 
   const searchInput = useRef(null);
 
+
   const isEditing = (record) => record.key === editingKey;
 
-  const edit = (record) => {
-    form.setFieldsValue({
-      name: '',
-      age: '',
-      address: '',
-      ...record,
-    });
-    setEditingKey(record.key);
-  };
-
-  const cancel = () => {
-    setEditingKey('');
-  };
-
-  const save = async (key) => {
-    try {
-      const row = await form.validateFields();
-      const newData = [...data];
-      const index = newData.findIndex((item) => key === item.key);
-
-      if (index > -1) {
-        const item = newData[index];
-        newData.splice(index, 1, { ...item, ...row });
-        setData(newData);
-        setEditingKey('');
-      } else {
-        newData.push(row);
-        setData(newData);
-        setEditingKey('');
-      }
-    } catch (errInfo) {
-      console.log('Validate Failed:', errInfo);
-    }
-  };
-
-  const handleChange = (pagination, filters, sorter) => {
-    setFilteredInfo(filters);
-    setSortedInfo(sorter);
-  };
-
+  
   const clearFilters = () => {
     setFilteredInfo({});
   };
@@ -107,58 +70,112 @@ const BasicTable = () => {
     setSortedInfo({});
   };
 
-  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+  const handleEditEvent = (record) => {
+    form.setFieldsValue({
+      name: '',
+      age: '',
+      address: '',
+      ...record,
+    });
+    setEditingKey(record.key);
+  };
+
+  const handleCancelEvent = () => {
+    setEditingKey('');
+  };
+
+  const handleSaveEvent = async (key) => {
+    try {
+      const row = await form.validateFields();
+      const newData = [...data];
+      const index = newData.findIndex((item) => key === item.key);
+
+      if (index > -1) {
+        const item = newData[index];
+        newData.splice(index, 1, { ...item, ...row });
+        editData({...row, key})
+      } else {
+        newData.push(row);
+      }
+
+      setData(newData);
+      setEditingKey('');
+    } catch (errInfo) {
+      console.log('Validate Failed:', errInfo);
+    }
+  };
+
+  const handleChangeEvent = (pagination, filters, sorter) => {
+    setFilteredInfo(filters);
+    setSortedInfo(sorter);
+  };
+
+  const handleAddEvent = () => {
+    let currentTime = new Date();
+
+    const newData = {
+      key: count + 1,
+      name: '',
+      address: '',
+      date: currentTime.toLocaleDateString("en-US"),
+      zone: 0,
+      region: 'Depot',
+      dispatchGroupTime: '5:30 AM',
+      truckDispatchTime: "12:00 PM",
+      truckEndTime: '5:30 AM',
+      pretripTime: "12:00 PM",
+      serviceType: 'A',
+      description: 'My name is John Brown, I am 32 years old, living in New York No. 1 Lake Park.',
+    };
+    addData(newData);
+    setData([newData, ...data]);
+    setCount(count + 1);
+    handleEditEvent(newData);
+
+  };
+
+  const handleDeleteEvent = (key) => {
+    const newData = data.filter((item) => item.key !== key);
+    setData(newData);
+  };
+
+  const handleSearchEvent = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
   };
 
-  const handleReset = (clearFilters) => {
+  const handleResetEvent = (clearFilters) => {
     clearFilters();
     setSearchText('');
   };
 
-  const onSelectChange = (newSelectedRowKeys) => {
-    console.log('selectedRowKeys changed: ', selectedRowKeys);
+  const handleSelectEvent = (newSelectedRowKeys) => {
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-      <div
-        style={{
-          padding: 8,
-        }}
-      >
+      <div className='table-filter-wrapper'>
         <Input
           ref={searchInput}
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
           onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-          style={{
-            marginBottom: 8,
-            display: 'block',
-          }}
+          onPressEnter={() => handleSearchEvent(selectedKeys, confirm, dataIndex)}
         />
         <Space>
           <Button
             type="primary"
-            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            onClick={() => handleSearchEvent(selectedKeys, confirm, dataIndex)}
             icon={<SearchOutlined />}
             size="small"
-            style={{
-              width: 90,
-            }}
           >
             Search
           </Button>
           <Button
-            onClick={() => clearFilters && handleReset(clearFilters)}
+            onClick={() => clearFilters && handleResetEvent(clearFilters)}
             size="small"
-            style={{
-              width: 90,
-            }}
           >
             Reset
           </Button>
@@ -213,9 +230,9 @@ const BasicTable = () => {
 
   });
 
-  const rowSelection = {
+  const getRowSelectionProps = {
     selectedRowKeys,
-    onChange: onSelectChange,
+    onChange: handleSelectEvent,
     selections: [
       Table.SELECTION_ALL,
       Table.SELECTION_INVERT,
@@ -257,28 +274,32 @@ const BasicTable = () => {
     {
       title: 'operation',
       dataIndex: 'operation',
-      width: 120,
+      width: 130,
       fixed: 'left',
       render: (_, record) => {
         const editable = isEditing(record);
         return editable ? (
           <span>
-            <Typography.Link
-              onClick={() => save(record.key)}
-              style={{
-                marginRight: 8,
-              }}
-            >
-              Save
+            <Typography.Link onClick={() => handleSaveEvent(record.key)}>
+              Save {' '}
             </Typography.Link>
-            <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
-              <a>Cancel</a>
+            <Popconfirm title="Sure to cancel?" onConfirm={handleCancelEvent}>
+              <Button type="link" danger='true'>
+                Cancel
+              </Button>
             </Popconfirm>
           </span>
         ) : (
-          <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
-            Edit
-          </Typography.Link>
+          <>
+            <Typography.Link disabled={editingKey !== ''} onClick={() => handleEditEvent(record)}>
+              Edit {' '}
+            </Typography.Link>
+            <Popconfirm title="Sure to delete?" onConfirm={() => handleDeleteEvent(record.key)}>
+              <Button type="link" danger='true'>
+                Delete
+              </Button>
+            </Popconfirm>
+          </>
         );
       },
     },
@@ -426,56 +447,55 @@ const BasicTable = () => {
         inputType: col.dataIndex === 'age' ? 'number' : 'text',
         dataIndex: col.dataIndex,
         title: col.title,
-        editing: isEditing(record),
+        editing: isEditing(record)
       }),
     };
   });
 
   return (
     <Form form={form} component={false}>
-      <Space
-        style={{
-          marginBottom: 16,
-        }}
-      >
-        <h2>Table</h2>
+      <Space className='table-header'>
+        <h2>Sample Table</h2>
+
         <Button onClick={clearFilters}>Clear filters</Button>
         <Button onClick={clearAll}>Clear filters and sorters</Button>
+        <Button
+          onClick={handleAddEvent}
+          type="primary"
+        >
+          + Add
+        </Button>
       </Space>
 
       <Table
+        className='logistic-table'
+        size="small"
         components={{
           body: {
             cell: EditableCell,
           },
         }}
         bordered
-        rowSelection={rowSelection}
+        rowSelection={getRowSelectionProps}
         columns={mergedColumns}
         rowClassName="editable-row"
-        dataSource={mockTabkeData}
-        onChange={handleChange}
+        dataSource={data}
+        onChange={handleChangeEvent}
         scroll={{
           x: 800,
           y: 600,
         }}
         expandable={{
           expandedRowRender: (record) => (
-            <p
-              style={{
-                margin: 0,
-              }}
-            >
-              {record.description}
-            </p>
+            <p> {record.description} </p>
           ),
           rowExpandable: (record) => record.name !== 'Not Expandable',
         }}
-      />;
+      />
     </Form>
-  );
+  )
 
 
-};
+}
 
 export default BasicTable;
