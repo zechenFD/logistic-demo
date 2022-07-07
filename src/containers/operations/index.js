@@ -1,7 +1,12 @@
-import OperationalForms from "../../components/forms/basicform";
+import React from "react";
+import FileUpload from "../../components/upload/fileUpload";
 
-const Operations = () => {
-  return <OperationalForms />;
-};
+function Operations() {
+  return (
+    <>
+      <FileUpload></FileUpload>
+    </>
+  );
+}
 
 export default Operations;
