@@ -13,6 +13,8 @@ const HomePage = () => {
     const mockData = useSelector(selectMockData);
     const dispatch = useDispatch();
 
+    console.log("mockData : ", mockData);
+
     const handleAddEvent = (data) => {
         dispatch(addData(data))
     }

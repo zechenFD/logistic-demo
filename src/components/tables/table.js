@@ -1,5 +1,5 @@
 import { SearchOutlined } from '@ant-design/icons';
-import { Button, Input, Space, Table } from 'antd';
+import { Button, Input, Space, Table, Tooltip } from 'antd';
 import { Form, InputNumber, Popconfirm, Typography } from 'antd';
 
 import { useRef, useState } from 'react';
@@ -54,13 +54,12 @@ const BasicTable = (props) => {
   const [sortedInfo, setSortedInfo] = useState({});
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [count, setCount] = useState(data.length);
-
   const searchInput = useRef(null);
 
 
   const isEditing = (record) => record.key === editingKey;
 
-  
+
   const clearFilters = () => {
     setFilteredInfo({});
   };
@@ -93,7 +92,7 @@ const BasicTable = (props) => {
       if (index > -1) {
         const item = newData[index];
         newData.splice(index, 1, { ...item, ...row });
-        editData({...row, key})
+        editData({ ...row, key })
       } else {
         newData.push(row);
       }
@@ -272,7 +271,7 @@ const BasicTable = (props) => {
 
   const columns = [
     {
-      title: 'operation',
+      title: 'Operation',
       dataIndex: 'operation',
       width: 130,
       fixed: 'left',
@@ -283,22 +282,22 @@ const BasicTable = (props) => {
             <Typography.Link onClick={() => handleSaveEvent(record.key)}>
               Save {' '}
             </Typography.Link>
-            <Popconfirm title="Sure to cancel?" onConfirm={handleCancelEvent}>
-              <Button type="link" danger='true'>
+            <Button type="link" danger='true'>
+              <Popconfirm title="Sure to cancel?" onConfirm={handleCancelEvent}>
                 Cancel
-              </Button>
-            </Popconfirm>
+              </Popconfirm>
+            </Button>
           </span>
         ) : (
           <>
             <Typography.Link disabled={editingKey !== ''} onClick={() => handleEditEvent(record)}>
               Edit {' '}
             </Typography.Link>
-            <Popconfirm title="Sure to delete?" onConfirm={() => handleDeleteEvent(record.key)}>
-              <Button type="link" danger='true'>
+            <Button type="link" danger='true' disabled={editingKey !== ''}>
+              <Popconfirm title="Sure to delete?" onConfirm={() => handleDeleteEvent(record.key)}>
                 Delete
-              </Button>
-            </Popconfirm>
+              </Popconfirm>
+            </Button>
           </>
         );
       },
@@ -327,13 +326,18 @@ const BasicTable = (props) => {
       sortOrder: sortedInfo.columnKey === 'address' ? sortedInfo.order : null,
       sortDirections: ['descend', 'ascend'],
       ellipsis: true,
+      render: address => (
+        <Tooltip placement="topLeft" title={address}>
+          {address}
+        </Tooltip>
+      ),
       editable: true,
     },
     {
       title: 'Date',
       dataIndex: 'date',
       key: 'date',
-      width: 200,
+      width: 100,
       filteredValue: filteredInfo.date || null,
       ...getColumnSearchProps('date'),
       sorter: (a, b) => ('' + a.date).localeCompare(b.date),
@@ -346,7 +350,7 @@ const BasicTable = (props) => {
       title: 'Zone',
       dataIndex: 'zone',
       key: 'zone',
-      width: 200,
+      width: 90,
       filteredValue: filteredInfo.zone || null,
       ...getColumnSearchProps('zone'),
       sorter: (a, b) => ('' + a.zone).localeCompare(b.zone),
@@ -359,7 +363,7 @@ const BasicTable = (props) => {
       title: 'Region',
       dataIndex: 'region',
       key: 'region',
-      width: 200,
+      width: 100,
       filteredValue: filteredInfo.region || null,
       ...getColumnSearchProps('region'),
       sorter: (a, b) => ('' + a.region).localeCompare(b.region),
@@ -372,33 +376,33 @@ const BasicTable = (props) => {
       title: 'Dispatch Group Time',
       dataIndex: 'dispatchGroupTime',
       key: 'dispatchGroupTime',
-      width: 200,
+      width: 150,
       filteredValue: filteredInfo.dispatchGroupTime || null,
       ...getColumnSearchProps('dispatchGroupTime'),
       sorter: (a, b) => ('' + a.dispatchGroupTime).localeCompare(b.dispatchGroupTime),
       sortOrder: sortedInfo.columnKey === 'dispatchGroupTime' ? sortedInfo.order : null,
       sortDirections: ['descend', 'ascend'],
-      ellipsis: true,
+      ellipsis: false,
       editable: true,
     },
     {
       title: 'Truck Dispatch Time',
       dataIndex: 'truckDispatchTime',
       key: 'truckDispatchTime',
-      width: 200,
+      width: 150,
       filteredValue: filteredInfo.truckDispatchTime || null,
       ...getColumnSearchProps('truckDispatchTime'),
       sorter: (a, b) => ('' + a.truckDispatchTime).localeCompare(b.truckDispatchTime),
       sortOrder: sortedInfo.columnKey === 'truckDispatchTime' ? sortedInfo.order : null,
       sortDirections: ['descend', 'ascend'],
-      ellipsis: true,
+      ellipsis: false,
       editable: true,
     },
     {
       title: 'Truck End Time',
       dataIndex: 'truckEndTime',
       key: 'truckEndTime',
-      width: 200,
+      width: 150,
       filteredValue: filteredInfo.truckEndTime || null,
       ...getColumnSearchProps('truckEndTime'),
       sorter: (a, b) => ('' + a.truckEndTime).localeCompare(b.truckEndTime),
@@ -411,7 +415,7 @@ const BasicTable = (props) => {
       title: 'Pre-trip Time',
       dataIndex: 'pretripTime',
       key: 'pretripTime',
-      width: 200,
+      width: 140,
       filteredValue: filteredInfo.pretripTime || null,
       ...getColumnSearchProps('pretripTime'),
       sorter: (a, b) => ('' + a.pretripTime).localeCompare(b.pretripTime),
@@ -424,7 +428,7 @@ const BasicTable = (props) => {
       title: 'Service Type',
       dataIndex: 'serviceType',
       key: 'serviceType',
-      width: 150,
+      width: 140,
       filteredValue: filteredInfo.serviceType || null,
       ...getColumnSearchProps('serviceType'),
       sorter: (a, b) => ('' + a.serviceType).localeCompare(b.serviceType),
@@ -490,6 +494,9 @@ const BasicTable = (props) => {
             <p> {record.description} </p>
           ),
           rowExpandable: (record) => record.name !== 'Not Expandable',
+        }}
+        pagination={{
+          position: ['bottomCenter'] //topLeft | topCenter | topRight |bottomLeft | bottomCenter | bottomRight
         }}
       />
     </Form>
