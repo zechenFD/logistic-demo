@@ -25,7 +25,7 @@ const HomePage = () => {
 
     return (
         <BasicTable 
-            tableData={mockData} 
+            tableData={mockData.data} 
             addData={handleAddEvent}
             editData={handleEditEvent}
         />

@@ -1,5 +1,5 @@
 import { SearchOutlined } from '@ant-design/icons';
-import { Button, Input, Space, Table, Tooltip } from 'antd';
+import { Button, DatePicker, Input, Space, Table, Tooltip } from 'antd';
 import { Form, InputNumber, Popconfirm, Typography } from 'antd';
 
 import { useRef, useState } from 'react';
@@ -55,7 +55,6 @@ const BasicTable = (props) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [count, setCount] = useState(data.length);
   const searchInput = useRef(null);
-
 
   const isEditing = (record) => record.key === editingKey;
 
@@ -139,6 +138,7 @@ const BasicTable = (props) => {
   };
 
   const handleSearchEvent = (selectedKeys, confirm, dataIndex) => {
+    console.log("111 selectedKeys: ", selectedKeys);
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
@@ -154,46 +154,61 @@ const BasicTable = (props) => {
   };
 
   const getColumnSearchProps = (dataIndex) => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-      <div className='table-filter-wrapper'>
-        <Input
-          ref={searchInput}
-          placeholder={`Search ${dataIndex}`}
-          value={selectedKeys[0]}
-          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-          onPressEnter={() => handleSearchEvent(selectedKeys, confirm, dataIndex)}
-        />
-        <Space>
-          <Button
-            type="primary"
-            onClick={() => handleSearchEvent(selectedKeys, confirm, dataIndex)}
-            icon={<SearchOutlined />}
-            size="small"
-          >
-            Search
-          </Button>
-          <Button
-            onClick={() => clearFilters && handleResetEvent(clearFilters)}
-            size="small"
-          >
-            Reset
-          </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
-              confirm({
-                closeDropdown: false,
-              });
-              setSearchText(selectedKeys[0]);
-              setSearchedColumn(dataIndex);
-            }}
-          >
-            Filter
-          </Button>
-        </Space>
-      </div>
-    ),
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => {
+
+      return (
+        <div className='table-filter-wrapper'>
+          {
+            dataIndex === 'date' ? 
+            <DatePicker
+              format={"MM/DD/YYYY"}
+              onChange={(e) => {
+                console.log("selectedKeys: ", selectedKeys);
+                setSelectedKeys(e ? [e.format("MM/DD/YYYY")] : []);
+              }}
+              onPressEnter={() => handleSearchEvent(selectedKeys, confirm, dataIndex)}
+              allowClear={true}
+            /> : <Input
+              ref={searchInput}
+              placeholder={`Search ${dataIndex}`}
+              value={selectedKeys[0]}
+              onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+              onPressEnter={() => handleSearchEvent(selectedKeys, confirm, dataIndex)}
+            />
+          }
+
+          <Space>
+            <Button
+              type="primary"
+              onClick={() => handleSearchEvent(selectedKeys, confirm, dataIndex)}
+              icon={<SearchOutlined />}
+              size="small"
+            >
+              Search
+            </Button>
+            <Button
+              onClick={() => clearFilters && handleResetEvent(clearFilters)}
+              size="small"
+            >
+              Reset
+            </Button>
+            <Button
+              type="link"
+              size="small"
+              onClick={() => {
+                confirm({
+                  closeDropdown: false,
+                });
+                setSearchText(selectedKeys[0]);
+                setSearchedColumn(dataIndex);
+              }}
+            >
+              Filter
+            </Button>
+          </Space>
+        </div>
+      )
+    },
 
     filterIcon: (filtered) => (
       <SearchOutlined
@@ -208,7 +223,11 @@ const BasicTable = (props) => {
 
     onFilterDropdownVisibleChange: (visible) => {
       if (visible) {
-        setTimeout(() => searchInput.current?.select(), 100);
+        console.log("searchInput: ", searchInput);
+        if(searchInput?.current && searchInput?.current.hasOwnProperty('select')){
+          setTimeout(() => searchInput?.current?.select(), 100);
+        }
+      
       }
     },
 
@@ -306,7 +325,7 @@ const BasicTable = (props) => {
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
-      width: 150,
+      width: 120,
       filteredValue: filteredInfo.name || null,
       sorter: (a, b) => ('' + a.name).localeCompare(b.name),
       sortOrder: sortedInfo.columnKey === 'name' ? sortedInfo.order : null,
@@ -376,7 +395,7 @@ const BasicTable = (props) => {
       title: 'Dispatch Group Time',
       dataIndex: 'dispatchGroupTime',
       key: 'dispatchGroupTime',
-      width: 150,
+      width: 130,
       filteredValue: filteredInfo.dispatchGroupTime || null,
       ...getColumnSearchProps('dispatchGroupTime'),
       sorter: (a, b) => ('' + a.dispatchGroupTime).localeCompare(b.dispatchGroupTime),
