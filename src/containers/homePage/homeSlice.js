@@ -2,8 +2,10 @@ import { createSlice } from '@reduxjs/toolkit';
 import { mockTabkeData } from './mock_table_data';
 
 const initialState = {
-  isLoading: false,
-  data: [...mockTabkeData]
+  data: [...mockTabkeData],
+  filteredInfo: {},
+  sortedInfo: {},
+  editingKey: ''
 };
 
 const homeSlice = createSlice({
@@ -23,11 +25,23 @@ const homeSlice = createSlice({
       console.log("edit: post data to server");
       console.log("state: ", state);
       console.log("action: ", action);
+    },
+    filterData(state, action) {
+      state.filteredInfo = action.payload;
+    },
+    sortData(state, action ) {
+      state.sortedInfo = action.payload;
+    },
+    setEditingKey(state, action) {
+      console.log("action: ", action);
+      state.editingKey = action.payload;
     }
 
   },
 });
 
-export const { getData, addData, editData } = homeSlice.actions;
-export const selectMockData = (state) => state.mockData; // mockData is defined in store
+export const selectHomeData = (state) => state.home;
+
+export const { getData, addData, editData, filterData, sortData, setEditingKey } = homeSlice.actions;
+
 export default homeSlice.reducer;

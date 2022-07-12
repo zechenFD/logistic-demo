@@ -1,33 +1,25 @@
 import { useSelector, useDispatch } from "react-redux";
 import BasicTable from '../../components/tables/table';
-
-// import {useFetchBreedsQuery} from './apiSlice';
-import { selectMockData, addData, editData } from "./homeSlice.js";
+import { selectHomeData, addData, editData, filterData, sortData, setEditingKey } from "./homeSlice.js";
 
 const HomePage = () => {
-    // API fectching testing
-    // const { data = [], isFetching } = useFetchBreedsQuery(10);
-    // console.log("data: ", data);
-
-    // get mock data
-    const mockData = useSelector(selectMockData);
+    const homeData = useSelector(selectHomeData);
     const dispatch = useDispatch();
+    const { data, filteredInfo, sortedInfo, editingKey } = homeData;
 
-    console.log("mockData : ", mockData);
-
-    const handleAddEvent = (data) => {
-        dispatch(addData(data))
-    }
-
-    const handleEditEvent = (data) => {
-        dispatch(editData(data))
-    }
+    console.log("mockData : ", homeData);
 
     return (
-        <BasicTable 
-            tableData={mockData.data} 
-            addData={handleAddEvent}
-            editData={handleEditEvent}
+        <BasicTable
+            tableData={data}
+            filteredInfo={filteredInfo}
+            sortedInfo={sortedInfo}
+            editingKey={editingKey}
+            addData={(data) => dispatch(addData(data))}
+            editData={(data) => dispatch(editData(data))}
+            filterData={(data) => dispatch(filterData(data))}
+            sortData={(data) => dispatch(sortData(data))}
+            setEditingKey={(key) => dispatch(setEditingKey(key))}
         />
     )
 }

@@ -42,16 +42,19 @@ const EditableCell = ({
   );
 };
 
-const BasicTable = (props) => {
-  const { tableData, addData, editData } = props;
+const BasicTable = ({ tableData,
+  addData,
+  editData,
+  filteredInfo,
+  filterData,
+  sortedInfo,
+  sortData,
+  editingKey,
+  setEditingKey }) => {
   const [form] = Form.useForm();
-
   const [data, setData] = useState(tableData);
-  const [editingKey, setEditingKey] = useState('');
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
-  const [filteredInfo, setFilteredInfo] = useState({});
-  const [sortedInfo, setSortedInfo] = useState({});
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [count, setCount] = useState(data.length);
   const searchInput = useRef(null);
@@ -60,12 +63,12 @@ const BasicTable = (props) => {
 
 
   const clearFilters = () => {
-    setFilteredInfo({});
+    filterData({})
   };
 
   const clearAll = () => {
-    setFilteredInfo({});
-    setSortedInfo({});
+    filterData({});
+    sortData({});
   };
 
   const handleEditEvent = (record) => {
@@ -104,8 +107,8 @@ const BasicTable = (props) => {
   };
 
   const handleChangeEvent = (pagination, filters, sorter) => {
-    setFilteredInfo(filters);
-    setSortedInfo(sorter);
+    filterData(filters)
+    sortData(sorter);
   };
 
   const handleAddEvent = () => {
@@ -125,11 +128,11 @@ const BasicTable = (props) => {
       serviceType: 'A',
       description: 'My name is John Brown, I am 32 years old, living in New York No. 1 Lake Park.',
     };
+
     addData(newData);
     setData([newData, ...data]);
     setCount(count + 1);
     handleEditEvent(newData);
-
   };
 
   const handleDeleteEvent = (key) => {
@@ -138,7 +141,6 @@ const BasicTable = (props) => {
   };
 
   const handleSearchEvent = (selectedKeys, confirm, dataIndex) => {
-    console.log("111 selectedKeys: ", selectedKeys);
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
@@ -159,22 +161,21 @@ const BasicTable = (props) => {
       return (
         <div className='table-filter-wrapper'>
           {
-            dataIndex === 'date' ? 
-            <DatePicker
-              format={"MM/DD/YYYY"}
-              onChange={(e) => {
-                console.log("selectedKeys: ", selectedKeys);
-                setSelectedKeys(e ? [e.format("MM/DD/YYYY")] : []);
-              }}
-              onPressEnter={() => handleSearchEvent(selectedKeys, confirm, dataIndex)}
-              allowClear={true}
-            /> : <Input
-              ref={searchInput}
-              placeholder={`Search ${dataIndex}`}
-              value={selectedKeys[0]}
-              onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-              onPressEnter={() => handleSearchEvent(selectedKeys, confirm, dataIndex)}
-            />
+            dataIndex === 'date' ?
+              <DatePicker
+                format={"MM/DD/YYYY"}
+                onChange={(e) => {
+                  setSelectedKeys(e ? [e.format("MM/DD/YYYY")] : []);
+                }}
+                onPressEnter={() => handleSearchEvent(selectedKeys, confirm, dataIndex)}
+                allowClear={true}
+              /> : <Input
+                ref={searchInput}
+                placeholder={`Search ${dataIndex}`}
+                value={selectedKeys[0]}
+                onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+                onPressEnter={() => handleSearchEvent(selectedKeys, confirm, dataIndex)}
+              />
           }
 
           <Space>
@@ -184,7 +185,7 @@ const BasicTable = (props) => {
               icon={<SearchOutlined />}
               size="small"
             >
-              Search
+              Filter
             </Button>
             <Button
               onClick={() => clearFilters && handleResetEvent(clearFilters)}
@@ -192,7 +193,7 @@ const BasicTable = (props) => {
             >
               Reset
             </Button>
-            <Button
+            {/* <Button
               type="link"
               size="small"
               onClick={() => {
@@ -204,7 +205,7 @@ const BasicTable = (props) => {
               }}
             >
               Filter
-            </Button>
+            </Button> */}
           </Space>
         </div>
       )
@@ -223,16 +224,15 @@ const BasicTable = (props) => {
 
     onFilterDropdownVisibleChange: (visible) => {
       if (visible) {
-        console.log("searchInput: ", searchInput);
-        if(searchInput?.current && searchInput?.current.hasOwnProperty('select')){
+        if (searchInput?.current && searchInput?.current.hasOwnProperty('select')) {
           setTimeout(() => searchInput?.current?.select(), 100);
         }
-      
+
       }
     },
 
-    render: (text) =>
-      searchedColumn === dataIndex ? (
+    render: (text) => {
+      return (searchedColumn === dataIndex ? (
         <Highlighter
           highlightStyle={{
             backgroundColor: '#ffc069',
@@ -242,9 +242,11 @@ const BasicTable = (props) => {
           autoEscape
           textToHighlight={text ? text.toString() : ''}
         />
-      ) : (
-        text
-      ),
+      ) : <span title={text}>{text}</span>
+
+      )
+    }
+
 
   });
 
@@ -345,11 +347,6 @@ const BasicTable = (props) => {
       sortOrder: sortedInfo.columnKey === 'address' ? sortedInfo.order : null,
       sortDirections: ['descend', 'ascend'],
       ellipsis: true,
-      render: address => (
-        <Tooltip placement="topLeft" title={address}>
-          {address}
-        </Tooltip>
-      ),
       editable: true,
     },
     {
