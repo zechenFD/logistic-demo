@@ -34,9 +34,9 @@ const CrudTable = () => {
   const [addModal, setAddModal] = useState(false);
 
   const getData = () => {
-    API.get(`addresses.json`)
+    API.get(`/addresses`)
       .then((response) => {
-        setDataSource(response.data.addresses.slice(0, 15));
+        setDataSource(response.data.slice(0, 15));
       })
       .catch((error) => {
         console.log(error);
@@ -155,7 +155,7 @@ const CrudTable = () => {
                     size="medium"
                     onChange={(e) => {
                       setEditingRecordRow((pre) => {
-                        return { ...pre, title: e.target.value };
+                        return { ...pre, street_address: e.target.value };
                       });
                     }}
                   ></Input>
@@ -163,15 +163,15 @@ const CrudTable = () => {
                 <Button
                   type="link"
                   onClick={() => {
-                    setDataSource((individualRecord) => {
-                      return individualRecord.map((record) => {
-                        if (record.id === editingRecordRow.id) {
-                          return editingRecordRow;
-                        } else {
-                          return record;
-                        }
+                    API.patch(`/addresses/${editingRecordRow.id}`, {
+                      street_address: editingRecordRow.street_address,
+                    })
+                      .then((response) => {
+                        setDataSource(response.data.slice(0, 15));
+                      })
+                      .catch((error) => {
+                        console.log(error);
                       });
-                    });
                     setEditMode(false);
                     setEditingRecordRow(null);
                   }}
@@ -373,9 +373,13 @@ const CrudTable = () => {
       cancelText: "No",
       okType: "Danger",
       onOk: () => {
-        setDataSource((pre) => {
-          return pre.filter((eachRecord) => eachRecord.id !== record.id);
-        });
+        API.delete(`/addresses/${record.id}`)
+          .then((response) => {
+            setDataSource(response.data.slice(0, 15));
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       },
     });
   };
@@ -434,9 +438,39 @@ const CrudTable = () => {
             ],
           }}
           expandable={{
-            expandedRowRender: () => {
-              return <p>This is dropdown content</p>;
+            expandedRowRender: (record) => {
+              const nestedColumns = [
+                {
+                  title: "Type",
+                  key: "type",
+                  dataIndex: "type",
+                },
+                {
+                  title: "Planned",
+                  key: "planned",
+                  dataIndex: "planned",
+                },
+                {
+                  title: "Allocated",
+                  key: "allocated",
+                  dataIndex: "allocated",
+                },
+                {
+                  title: "Unassigned",
+                  key: "unassigned",
+                  dataIndex: "unassigned",
+                },
+              ];
+
+              return (
+                <Table
+                  columns={nestedColumns}
+                  dataSource={record.nestedData}
+                  pagination={false}
+                />
+              );
             },
+            rowExpandable: (record) => record?.nestedData?.length > 0,
           }}
           scroll={{
             x: 1400,
@@ -452,18 +486,18 @@ const CrudTable = () => {
           setDisplayModal(false);
         }}
         onOk={() => {
-          setDataSource((individualRecord) => {
-            return individualRecord.map((record) => {
-              if (record.id === editingRecordRow.id) {
-                return editingRecordRow;
-              } else {
-                return record;
-              }
+          API.patch(`/addresses/${editingRecordRow.id}`, {
+            zip: editingRecordRow.zip,
+            service_type: editingRecordRow.service_type,
+          })
+            .then((response) => {
+              setDataSource(response.data.slice(0, 15));
+            })
+            .catch((error) => {
+              console.log(error);
             });
-          });
-
           setDisplayModal(false);
-          //setEditingRecordRow(null);
+          setEditingRecordRow(null);
         }}
         onText="Save"
       >

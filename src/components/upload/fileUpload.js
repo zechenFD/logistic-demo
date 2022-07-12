@@ -1,7 +1,6 @@
 import { Button, Typography, Upload, message } from "antd";
 import React, { useState } from "react";
 import { UploadOutlined } from "@ant-design/icons";
-import axios from "axios";
 import API from "../../api";
 
 function FileUpload() {
