@@ -11,7 +11,7 @@ import HomePage from '../containers/homePage';
 import Routing from '../containers/routing';
 import Scheduling from '../containers/scheduling';
 import Operations from '../containers/operations';
-import SamplePage from '../containers/samplePage';
+import EmployeesPage from '../containers/employees/index';
 
 import 'antd/dist/antd.less';
 import './App.less'
@@ -33,7 +33,7 @@ const App = () => {
             <Layout className="site-layout">
                 <LogisticHeader collapsed={collapsed} headerEvent={handleHeaderEvent} />
 
-                <LogisticBreadcrumb />
+                {/* <LogisticBreadcrumb /> */}
 
                 <Content className="site-layout-background">
                     <Routes>
@@ -41,7 +41,7 @@ const App = () => {
                         <Route path="/scheduling" element={<Scheduling />} />
                         <Route path="/operations" element={<Operations />} />
                         <Route path="/routing" ex element={<Routing />} />
-                        <Route path="/samplePage" ex element={<SamplePage />} />
+                        <Route path="/employees" ex element={<EmployeesPage />} />
                     </Routes>
 
                 </Content>

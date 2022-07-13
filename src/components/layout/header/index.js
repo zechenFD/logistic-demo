@@ -83,7 +83,7 @@ const LogisticHeader = (props) => {
             })}
             <Menu mode="horizontal">
 
-                <Menu.Item>
+                <Menu.Item key='1'>
                     <span className="avatar-item" onClick={openNotification}>
                         <Badge count={count}>
                             Notification
@@ -92,7 +92,7 @@ const LogisticHeader = (props) => {
                     </span>
                 </Menu.Item>
 
-                <Menu.Item>
+                <Menu.Item key='2'>
                     <Dropdown overlay={widgetMenu} trigger={['click']} className='logistic-dropdown'>
                         <Avatar title='User' icon={<UserOutlined />} />
                     </Dropdown>

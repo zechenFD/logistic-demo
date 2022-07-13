@@ -1,18 +1,18 @@
 import { useSelector, useDispatch } from "react-redux";
 import BasicTable from '../../components/tables/basicTable/table';
-import { selectHomeData, addData, editData, filterData, sortData, setEditingKey } from "./homeSlice.js";
+import { selectEmployeesInfo, addData, editData, filterData, sortData, setEditingKey, getData } from "./employeesSlice.js";
 
-const HomePage = () => {
-    const homeData = useSelector(selectHomeData);
+const EmployeesPage = () => {
+    const employeesInfo = useSelector(selectEmployeesInfo);
     const dispatch = useDispatch();
-    const { data, filteredInfo, sortedInfo, editingKey } = homeData;
-    const hiddenColumns = ['key', 'age', 'description'];
-    const wideColumns = ['address'];
-    const narrowColumns = ['zone', 'serviceType', 'region']
-    
+    const { data, filteredInfo, sortedInfo, editingKey } = employeesInfo;
+    const hiddenColumns = ['key', 'warnings', 'errors', 'debug', 'notice'];
+    const wideColumns = ['employeeDistributionEmail', 'fullName'];
+    const narrowColumns = ['status', 'errorCode']
+
     return (
         <BasicTable
-            tableTitle='Sample Table'
+            tableTitle='Employees Info'
             tableData={data}
             hiddenColumns={hiddenColumns}
             wideColumns={wideColumns}
@@ -29,4 +29,4 @@ const HomePage = () => {
     )
 }
 
-export default HomePage;
+export default EmployeesPage;

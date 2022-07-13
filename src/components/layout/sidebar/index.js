@@ -102,10 +102,10 @@ const LogisticSidebar = (props) => {
                 }
             >
                 <List>
-                    <List.Item> <Link to='/samplePage' onClick={onClose}>Page 1</Link></List.Item>
-                    <List.Item> <Link to='/samplePage' onClick={onClose}>Page 2</Link></List.Item>
-                    <List.Item> <Link to='/samplePage' onClick={onClose}>Page 3</Link></List.Item>
-                    <List.Item> <Link to='/samplePage' onClick={onClose}>Page 4</Link></List.Item>
+                    <List.Item> <Link to='/employees' onClick={onClose}>Employees Info</Link></List.Item>
+                    <List.Item> <Link to='/employees' onClick={onClose}>Employees Data</Link></List.Item>
+                    <List.Item> <Link to='/employees' onClick={onClose}>Employees List</Link></List.Item>
+                    <List.Item> <Link to='/employees' onClick={onClose}>Employees</Link></List.Item>
                 </List>
 
             </Drawer>
