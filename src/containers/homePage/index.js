@@ -9,7 +9,7 @@ const HomePage = () => {
     const hiddenColumns = ['key', 'age', 'description'];
     const wideColumns = ['address'];
     const narrowColumns = ['zone', 'serviceType', 'region']
-    
+
     return (
         <BasicTable
             tableTitle='Sample Table'

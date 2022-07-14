@@ -1,12 +1,18 @@
 import { useEffect, useRef, useState } from 'react';
 import Highlighter from 'react-highlight-words';
-import { SearchOutlined } from '@ant-design/icons';
-import { Button, DatePicker, Input, Space, Table } from 'antd';
+import { SearchOutlined, DownOutlined } from '@ant-design/icons';
+import { Button, DatePicker, Input, Space, Table, Dropdown, Menu } from 'antd';
 import { Form, InputNumber, Popconfirm, Typography } from 'antd';
+
+import tableExport from "antd-table-export";
+import jsPDF from "jspdf";
+import { autoTable } from 'jspdf-autotable';
+
 
 import { capitalizeFirstLetter } from '../../../utilities/common';
 import LogisticAlert from '../../alerts/logisticAlert';
-import { OpenMessage } from '../../messages/messages';
+// import { OpenMessage } from '../../messages/messages';
+import { TableSpin } from '../../loading/tableSpin'
 import './table.less';
 
 const EditableCell = ({
@@ -58,6 +64,7 @@ const BasicTable = ({
   sortData,
   editingKey,
   setEditingKey }) => {
+
   const [form] = Form.useForm();
   const [data, setData] = useState(tableData);
   const [searchText, setSearchText] = useState('');
@@ -66,16 +73,32 @@ const BasicTable = ({
   const [count, setCount] = useState(data.length);
   const [alertShow, setAlertShow] = useState(false);
   const [alertMsg, setAlertMsg] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+
+  const [filteredData, setFilteredData] = useState(data);
 
   const searchInput = useRef(null);
 
-  useEffect(() => {
-      let alertTimer = setTimeout(() => setAlertShow(false), 5000);
+  setTimeout(() => {
+    setIsLoading(false)
+  }, 1000);
 
-      return () => {
-        clearTimeout(alertTimer);
-      };
-    }, [alertShow]
+
+
+  useEffect(() => {
+    let alertTimer = setTimeout(() => {
+      setAlertShow(false);
+    }, 5000);
+
+    let loadingTimer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
+
+    return () => {
+      clearTimeout(alertTimer);
+      clearTimeout(loadingTimer);
+    };
+  }, [alertShow, isLoading]
   );
 
   const isEditing = (record) => record.key === editingKey;
@@ -116,18 +139,25 @@ const BasicTable = ({
       } else {
         newData.push(row);
       }
-      setAlertShow(true);
+
+      setTimeout(() => {
+        setAlertShow(true);
+      }, 2000);
+
       setData(newData);
       setEditingKey('');
-      OpenMessage('Updating', 'Update Successfully!');
+      setIsLoading(true);
+      // OpenMessage('Updating', 'Update Successfully!');
+
     } catch (errInfo) {
       console.log('Validate Failed:', errInfo);
     }
   };
 
-  const handleChangeEvent = (pagination, filters, sorter) => {
+  const handleChangeEvent = (pagination, filters, sorter, extra) => {
     filterData(filters)
     sortData(sorter);
+    setFilteredData( extra.currentDataSource);
   };
 
   const handleAddEvent = () => {
@@ -159,9 +189,14 @@ const BasicTable = ({
   const handleDeleteEvent = (key) => {
     const newData = data.filter((item) => item.key !== key);
     setAlertMsg("Delete Successfully!");
-    setAlertShow(true);
+
+    setTimeout(() => {
+      setAlertShow(true);
+    }, 2000);
+
     setData(newData);
-    OpenMessage('Deleting', 'Delete Successfully!');
+    setIsLoading(true);
+    // OpenMessage('Deleting', 'Delete Successfully!');
   };
 
   const handleSearchEvent = (selectedKeys, confirm, dataIndex) => {
@@ -367,7 +402,6 @@ const BasicTable = ({
     ];
   }
 
-
   const mergedColumns = columns().map((col) => {
     if (!col.editable) {
       return col;
@@ -385,13 +419,72 @@ const BasicTable = ({
     };
   });
 
+  const handleExportExcelEvent = () => {
+    const exportInstance = new tableExport(filteredData, columns());
+    console.log("filteredInfo: ", filteredInfo);
+    exportInstance.download(tableTitle, "xlsx");
+  }
+
+  const handleExportPdfEvent = () => {
+    const unit = "pt";
+    const size = "A4"; // Use A1, A2, A3 or A4
+    const orientation = "portrait"; // portrait or landscape
+
+    const marginLeft = 40;
+    const doc = new jsPDF(orientation, unit, size);
+    doc.setFontSize(15);
+
+    const title = tableTitle;
+
+    let content = {
+      startY: 50,
+      body: filteredData
+    };
+    
+    doc.text(title, marginLeft, 40);
+    doc.autoTable(content);
+    doc.save(tableTitle)
+  }
+
   return (
     <Form form={form} component={false}>
       <Space className='table-header'>
         <h2>{tableTitle}</h2>
 
-        <Button onClick={clearFilters}>Clear filters</Button>
-        <Button onClick={clearAll}>Clear filters and sorters</Button>
+        <Dropdown.Button
+          type='button'
+          icon={<DownOutlined />}
+          overlay={() => {
+            return (
+
+              <Menu>
+                <Menu.Item key='1' onClick={() => handleExportExcelEvent()}>Export to Excel</Menu.Item>
+              </Menu>
+            )
+          }
+          }
+          onClick={() => handleExportPdfEvent()}
+        >
+          Export to PDF
+        </Dropdown.Button>
+
+        <Dropdown.Button
+          type='button'
+          icon={<DownOutlined />}
+          overlay={() => {
+            return (
+
+              <Menu>
+                <Menu.Item key='1' onClick={clearFilters}>Clear filters</Menu.Item>
+              </Menu>
+            )
+          }
+          }
+          onClick={() => clearAll()}
+        >
+          Clear filters and sorters
+        </Dropdown.Button>
+
         <Button
           onClick={handleAddEvent}
           type="primary"
@@ -403,12 +496,13 @@ const BasicTable = ({
       {alertShow && <LogisticAlert alertType='success' alertMsg={alertMsg} alertClose={handleAlertCloseEvent} />}
 
       <Table
+        name='sampleTable'
         className='logistic-table'
         size="small"
         components={{
           body: {
             cell: EditableCell,
-          },
+          }
         }}
         bordered
         rowSelection={getRowSelectionProps}
@@ -429,10 +523,10 @@ const BasicTable = ({
         pagination={{
           position: ['bottomCenter'] //topLeft | topCenter | topRight |bottomLeft | bottomCenter | bottomRight
         }}
+        loading={{ indicator: <TableSpin />, spinning: isLoading }}
       />
     </Form>
   )
-
 
 }
 
