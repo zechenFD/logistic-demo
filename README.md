@@ -9,3 +9,4 @@ Technology Stack
 3. Axios - Axios is an HTTP client library that allows to make requests to a given endpoint.
 4. React Router - Is the standard routing library for React
 5. Webpack, babel, ES6 - Is Preconfigured and is internal through create-react-app
+6. Customized Theme configuration changes
