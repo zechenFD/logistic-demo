@@ -1,8 +1,8 @@
-const Routing = () => {
+import React from "react";
+import CrudTable from "../../components/crudTable/crudTable";
 
-    return (
-        <h1>Routing Page</h1>
-    )
+function Routing() {
+  return <CrudTable></CrudTable>;
 }
 
 export default Routing;

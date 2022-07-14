@@ -1,8 +1,12 @@
-const Operations = () => {
+import React from "react";
+import FileUpload from "../../components/upload/fileUpload";
 
-    return (
-        <h1>Operations Page</h1>
-    )
+function Operations() {
+  return (
+    <>
+      <FileUpload></FileUpload>
+    </>
+  );
 }
 
 export default Operations;
