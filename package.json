@@ -11,10 +11,7 @@
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^13.5.0",
     "antd": "^4.21.3",
-<<<<<<< HEAD
     "antd-table-export": "^0.0.5",
-=======
->>>>>>> main
     "axios": "^0.27.2",
     "babel-jest": "^27.4.2",
     "babel-loader": "^8.2.3",
@@ -38,13 +35,10 @@
     "jest": "^27.4.3",
     "jest-resolve": "^27.4.2",
     "jest-watch-typeahead": "^1.0.0",
-<<<<<<< HEAD
     "json-loader": "^0.5.7",
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.5.25",
-=======
     "json-server": "^0.17.0",
->>>>>>> main
     "less-loader": "^11.0.0",
     "mini-css-extract-plugin": "^2.4.5",
     "postcss": "^8.4.4",

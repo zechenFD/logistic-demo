@@ -18,8 +18,10 @@ import {
   ShopOutlined,
   ShoppingCartOutlined,
 } from "@ant-design/icons";
-import API from "../../api";
-import OperationalForms from "../forms/basicform";
+import API from "../../../api";
+import OperationalForms from "../../forms/basicform";
+
+import './crudTable.less'
 
 const CrudTable = () => {
   const [loading, setLoading] = useState(false);
@@ -87,7 +89,7 @@ const CrudTable = () => {
           <>
             <Input
               autoFocus
-              style={{ margin: 10, width: 200 }}
+              style={{ width: 200 }}
               placeholder="Enter Search Key"
               value={selectedKeys[0]}
               onChange={(e) => {
@@ -346,6 +348,7 @@ const CrudTable = () => {
     {
       title: "Actions",
       key: "actions",
+      width: 200,
       render: (record) => {
         return (
           <>
@@ -392,14 +395,15 @@ const CrudTable = () => {
 
   return (
     <>
-      {" "}
+    
       <Space
         style={{
           marginBottom: 16,
         }}
       >
+          <h2>Address Table</h2>
         <Button onClick={clearFilters}>Clear filters</Button>
-        <Button onClick={addAddress}>ADD ADDRESS</Button>
+        <Button type="primary" onClick={addAddress}>Add Address</Button>
       </Space>
       <Form form={form}>
         {" "}
@@ -407,11 +411,9 @@ const CrudTable = () => {
           loading={loading}
           dataSource={dataSource}
           columns={columns}
-          pagination={
-            {
-              //pagination changes and can make API calls
-            }
-          }
+          pagination={{
+            position: ['bottomCenter'] //topLeft | topCenter | topRight |bottomLeft | bottomCenter | bottomRight
+          }}
           rowKey="id"
           rowSelection={{
             type: "checkbox",
@@ -506,7 +508,7 @@ const CrudTable = () => {
           Zip:
           <Input
             value={editingRecordRow?.zip}
-            style={{ marginTop: 10, width: 100 }}
+            style={{ width: 100 }}
             onChange={(e) => {
               setEditingRecordRow((pre) => {
                 return { ...pre, zip: e.target.value };
@@ -519,7 +521,6 @@ const CrudTable = () => {
             defaultValue={editingRecordRow?.service_type}
             style={{
               width: 180,
-              marginTop: 10,
             }}
             onChange={(value) => {
               setEditingRecordRow((pre) => {

@@ -142,7 +142,7 @@ const BasicTable = ({
 
       setTimeout(() => {
         setAlertShow(true);
-      }, 2000);
+      }, 1500);
 
       setData(newData);
       setEditingKey('');
@@ -192,7 +192,7 @@ const BasicTable = ({
 
     setTimeout(() => {
       setAlertShow(true);
-    }, 2000);
+    }, 1500);
 
     setData(newData);
     setIsLoading(true);
@@ -440,7 +440,7 @@ const BasicTable = ({
       startY: 50,
       body: filteredData
     };
-    
+
     doc.text(title, marginLeft, 40);
     doc.autoTable(content);
     doc.save(tableTitle)

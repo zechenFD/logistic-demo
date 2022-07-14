@@ -1,5 +1,5 @@
 import React from "react";
-import CrudTable from "../../components/crudTable/crudTable";
+import CrudTable from "../../components/tables/crudTable/crudTable";
 
 function Routing() {
   return <CrudTable></CrudTable>;
