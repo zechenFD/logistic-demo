@@ -1,21 +1,32 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { mockTabkeData } from './mock_table_data';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import API from '../../api';
 
 const initialState = {
-  data: [...mockTabkeData],
+  data: [],
   filteredInfo: {},
   sortedInfo: {},
-  editingKey: ''
+  editingKey: '',
+  isLoading: true
 };
 
-const homeSlice = createSlice({
+export const getSampleTableData = createAsyncThunk("home/getSampleTableData", async () => {
+  const respData = await API.get(`/mocktabledata`)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+
+  return respData;
+}
+);
+
+
+export const homeSlice = createSlice({
   name: 'home',
   initialState,
   reducers: {
-    getData(state, action) {
-      console.log("state: ", state);
-      console.log("action: ", action);
-    },
     addData(state, action) {
       console.log("add: post data to server");
       console.log("state: ", state);
@@ -36,12 +47,23 @@ const homeSlice = createSlice({
       console.log("action: ", action);
       state.editingKey = action.payload;
     }
-
   },
+  extraReducers: {
+    [getSampleTableData.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [getSampleTableData.fulfilled]: (state, action) => {
+      state.data = action.payload;
+      state.isLoading = false;
+    },
+    [getSampleTableData.rejected]: (state) => {
+      state.isLoading = false;
+    },
+  }
 });
 
 export const selectHomeData = (state) => state.home;
 
-export const { getData, addData, editData, filterData, sortData, setEditingKey } = homeSlice.actions;
+export const { addData, editData, filterData, sortData, setEditingKey } = homeSlice.actions;
 
-export default homeSlice.reducer;
+export const homeReducer = homeSlice.reducer;
