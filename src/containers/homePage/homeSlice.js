@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { mockTabkeData } from './mock_table_data';
-import axios from 'axios';
 
 const initialState = {
   data: [...mockTabkeData],
@@ -8,25 +7,6 @@ const initialState = {
   sortedInfo: {},
   editingKey: ''
 };
-
-export const getEmployeesInfo = async () => {
-  const config = {
-    method: 'post',
-    url: 'http://logisticsdev2.nj01/logisticsapi/v/1/fd/employee/getAllEmployeesInfo',
-    headers: {
-      'Cookie': 'NSC_mphjtujdtefw2=ffffffff094838cf45525d5f4f58455e445a4a4229a0; Path=/; HttpOnly;'
-    },
-    data: null
-  };
-
-  axios(config)
-    .then(function (response) {
-      console.log(JSON.stringify(response.data));
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-}
 
 const homeSlice = createSlice({
   name: 'home',

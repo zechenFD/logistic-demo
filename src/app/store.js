@@ -8,7 +8,7 @@ export const store = configureStore({
     employeesInfo: employeesInfoReducer
   },
   middleware: getDefaultMiddleware =>
-  getDefaultMiddleware({
-    serializableCheck: false,
-  }),
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });
