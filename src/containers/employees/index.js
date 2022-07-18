@@ -1,14 +1,23 @@
+import { useEffect } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import BasicTable from '../../components/tables/basicTable/table';
-import { selectEmployeesInfo, addData, editData, filterData, sortData, setEditingKey, getData } from "./employeesSlice.js";
+import { getEmployeesInfo, selectEmployeesInfo, addData, editData, filterData, sortData, setEditingKey, getData } from "./employeesSlice.js";
 
 const EmployeesPage = () => {
     const employeesInfo = useSelector(selectEmployeesInfo);
     const dispatch = useDispatch();
-    const { data, filteredInfo, sortedInfo, editingKey } = employeesInfo;
+    const { data, isLoading, filteredInfo, sortedInfo, editingKey } = employeesInfo;
     const hiddenColumns = ['key', 'warnings', 'errors', 'debug', 'notice'];
     const wideColumns = ['employeeDistributionEmail', 'fullName'];
     const narrowColumns = ['status', 'errorCode']
+
+    useEffect(() => {
+        dispatch(getEmployeesInfo());
+    }, [])
+
+    if(isLoading){
+        return <div>loading...</div>
+    }
 
     return (
         <BasicTable

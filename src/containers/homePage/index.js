@@ -6,8 +6,8 @@ import { getSampleTableData, selectHomeData, addData, editData, filterData, sort
 const HomePage = () => {
     const homeData = useSelector(selectHomeData);
     const dispatch = useDispatch();
-    const {data, isLoading, filteredInfo, sortedInfo, editingKey } = homeData;
-    
+    const { data, isLoading, filteredInfo, sortedInfo, editingKey } = homeData;
+
     const hiddenColumns = ['key', 'age', 'description'];
     const wideColumns = ['address'];
     const narrowColumns = ['zone', 'serviceType', 'region']
@@ -16,28 +16,27 @@ const HomePage = () => {
         dispatch(getSampleTableData());
     }, [])
 
-    if (!isLoading) {
-        return (
-            <BasicTable
-                tableTitle='Sample Table'
-                tableData={data}
-                hiddenColumns={hiddenColumns}
-                wideColumns={wideColumns}
-                narrowColumns={narrowColumns}
-                filteredInfo={filteredInfo}
-                sortedInfo={sortedInfo}
-                editingKey={editingKey}
-                addData={(data) => dispatch(addData(data))}
-                editData={(data) => dispatch(editData(data))}
-                filterData={(data) => dispatch(filterData(data))}
-                sortData={(data) => dispatch(sortData(data))}
-                setEditingKey={(key) => dispatch(setEditingKey(key))}
-            />
-        )
+    if(isLoading){
+        return <div>loading...</div>
     }
 
-
-    return <div>Loading...</div>
+    return (
+        <BasicTable
+            tableTitle='Sample Table'
+            tableData={data}
+            hiddenColumns={hiddenColumns}
+            wideColumns={wideColumns}
+            narrowColumns={narrowColumns}
+            filteredInfo={filteredInfo}
+            sortedInfo={sortedInfo}
+            editingKey={editingKey}
+            addData={(data) => dispatch(addData(data))}
+            editData={(data) => dispatch(editData(data))}
+            filterData={(data) => dispatch(filterData(data))}
+            sortData={(data) => dispatch(sortData(data))}
+            setEditingKey={(key) => dispatch(setEditingKey(key))}
+        />
+    )
 }
 
 export default HomePage;
