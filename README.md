@@ -22,3 +22,14 @@ Technology Stack
 
 9. Customized Theme configuration changes
 
+Scripts
+
+1. npm start
+   Runs the app in the development mode.
+   Open http://localhost:3000 to view it in your browser.
+
+The page will reload when you make changes.
+You may also see any lint errors in the console.
+
+2. npm run serve-json
+   Runs the JSON server so that the End points can be generated and available for data fetching through AXIOS
