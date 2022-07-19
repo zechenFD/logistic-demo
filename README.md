@@ -2,7 +2,8 @@
 
 demo for logistic proof and concepts
 
-Setup
+
+### env setup
 
 1, after clone to local, install all dependencies, run
 ```bash
@@ -20,7 +21,9 @@ npm start
 ```
 
 
-Technology Stack
+
+
+### Technology Stack
 
 1. React - A JavaScript library for building user interfaces specifically for single-page applications.
 
