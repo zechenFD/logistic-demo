@@ -1,21 +1,21 @@
 {
   "files": {
-    "main.css": "/static/css/main.4b31029c.css",
-    "main.js": "/static/js/main.e76e40e7.js",
-    "static/js/498.1e028317.chunk.js": "/static/js/498.1e028317.chunk.js",
-    "static/js/703.83ba4154.chunk.js": "/static/js/703.83ba4154.chunk.js",
-    "static/js/142.83f91295.chunk.js": "/static/js/142.83f91295.chunk.js",
-    "static/js/787.f9c669a1.chunk.js": "/static/js/787.f9c669a1.chunk.js",
-    "index.html": "/index.html",
-    "main.4b31029c.css.map": "/static/css/main.4b31029c.css.map",
-    "main.e76e40e7.js.map": "/static/js/main.e76e40e7.js.map",
-    "498.1e028317.chunk.js.map": "/static/js/498.1e028317.chunk.js.map",
-    "703.83ba4154.chunk.js.map": "/static/js/703.83ba4154.chunk.js.map",
-    "142.83f91295.chunk.js.map": "/static/js/142.83f91295.chunk.js.map",
-    "787.f9c669a1.chunk.js.map": "/static/js/787.f9c669a1.chunk.js.map"
+    "main.css": "/logistic-demo/static/css/main.4b31029c.css",
+    "main.js": "/logistic-demo/static/js/main.e62b3892.js",
+    "static/js/498.1e028317.chunk.js": "/logistic-demo/static/js/498.1e028317.chunk.js",
+    "static/js/703.83ba4154.chunk.js": "/logistic-demo/static/js/703.83ba4154.chunk.js",
+    "static/js/142.83f91295.chunk.js": "/logistic-demo/static/js/142.83f91295.chunk.js",
+    "static/js/787.f9c669a1.chunk.js": "/logistic-demo/static/js/787.f9c669a1.chunk.js",
+    "index.html": "/logistic-demo/index.html",
+    "main.4b31029c.css.map": "/logistic-demo/static/css/main.4b31029c.css.map",
+    "main.e62b3892.js.map": "/logistic-demo/static/js/main.e62b3892.js.map",
+    "498.1e028317.chunk.js.map": "/logistic-demo/static/js/498.1e028317.chunk.js.map",
+    "703.83ba4154.chunk.js.map": "/logistic-demo/static/js/703.83ba4154.chunk.js.map",
+    "142.83f91295.chunk.js.map": "/logistic-demo/static/js/142.83f91295.chunk.js.map",
+    "787.f9c669a1.chunk.js.map": "/logistic-demo/static/js/787.f9c669a1.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.4b31029c.css",
-    "static/js/main.e76e40e7.js"
+    "static/js/main.e62b3892.js"
   ]
 }
