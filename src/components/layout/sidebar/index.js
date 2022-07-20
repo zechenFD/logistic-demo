@@ -22,11 +22,15 @@ const menu = [{
 }, {
     key: '4',
     path: '/routing'
+},{
+    key: '5',
+    path: '/employees'
 }]
 
 const LogisticSidebar = (props) => {
     const location = useLocation();
     const [visible, setVisible] = useState(false);
+    console.log("location: ", location);
 
     const currentKey = menu.find(_item => location.pathname === _item.path)?.key;
     const { collapsed } = props;
@@ -49,7 +53,7 @@ const LogisticSidebar = (props) => {
                 theme='dark'
                 mode="inline"
                 defaultSelectedKeys={[currentKey ? currentKey : '1']}
-                selectedKeys={currentKey ? currentKey : '5'}
+                selectedKeys={currentKey ? currentKey : '1'}
             >
                 <Menu.Item key="1">
                     <Link to='/logistic-demo'>
