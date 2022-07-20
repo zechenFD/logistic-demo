@@ -84,11 +84,11 @@ const BasicTable = ({
 
   setTimeout(() => {
     setIsLoading(false)
-  }, 1000);
+  }, 500);
 
-  if(isRequestFailed && firstTimeInit){
+  if(isRequestFailed && firstTimeInit && !isLoading){
     OpenMessage('API is failed, the mock data has been initialized', 'Mock data load successfully!');
-    setFirstTimeInit(false);
+    setFirstTimeInit(false)
   }
 
   useEffect(() => {
