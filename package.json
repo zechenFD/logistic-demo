@@ -1,6 +1,6 @@
 {
   "name": "logistic-demo",
-  "homepage": "https://zechenfd.github.io/",
+  "homepage": "https://zechenfd.github.io/logistic-demo",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
