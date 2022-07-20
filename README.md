@@ -14,11 +14,14 @@ npm i
 ```bash
 npm run serve-json
 ```
+This will run the JSON server so that the End points can be generated and available for data fetching through AXIOS
 
 3, start the project, run
 ```bash
 npm start
 ```
+This will run the app in the development mode.
+Open http://localhost:3000 to view it in your browser.
 
 
 
@@ -43,14 +46,4 @@ npm start
 
 9. Customized Theme configuration changes
 
-Scripts
 
-1. npm start
-   Runs the app in the development mode.
-   Open http://localhost:3000 to view it in your browser.
-
-The page will reload when you make changes.
-You may also see any lint errors in the console.
-
-2. npm run serve-json
-   Runs the JSON server so that the End points can be generated and available for data fetching through AXIOS
