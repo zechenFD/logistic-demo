@@ -37,7 +37,7 @@ const App = () => {
 
                 <Content className="site-layout-background">
                     <Routes>
-                        <Route path="/" exact element={<HomePage />} />
+                        <Route path="/logistic-demo" exact element={<HomePage />} />
                         <Route path="/scheduling" element={<Scheduling />} />
                         <Route path="/operations" element={<Operations />} />
                         <Route path="/routing" element={<Routing />} />

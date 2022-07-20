@@ -12,7 +12,7 @@ import './index.less';
 
 const menu = [{
     key: '1',
-    path: '/'
+    path: '/logistic-demo'
 }, {
     key: '2',
     path: '/scheduling'
@@ -48,11 +48,11 @@ const LogisticSidebar = (props) => {
                 className='logistic-sidebar'
                 theme='dark'
                 mode="inline"
-                defaultSelectedKeys={[currentKey ? currentKey : '5']}
+                defaultSelectedKeys={[currentKey ? currentKey : '1']}
                 selectedKeys={currentKey ? currentKey : '5'}
             >
                 <Menu.Item key="1">
-                    <Link to='/'>
+                    <Link to='/logistic-demo'>
                         <HomeOutlined />
                         <span className="sidebar-text">Home</span>
                     </Link>
