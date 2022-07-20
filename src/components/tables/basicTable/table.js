@@ -80,12 +80,15 @@ const BasicTable = ({
 
   const searchInput = useRef(null);
 
+  const [firstTimeInit, setFirstTimeInit] = useState(false);
+
   setTimeout(() => {
     setIsLoading(false)
   }, 1000);
 
-  if(isRequestFailed){
+  if(isRequestFailed && firstTimeInit){
     OpenMessage('API is failed, the mock data has been initialized', 'Mock data load successfully!');
+    setFirstTimeInit(false)
   }
 
   useEffect(() => {
@@ -97,11 +100,15 @@ const BasicTable = ({
       setIsLoading(false);
     }, 1500);
 
+    if(isRequestFailed){
+      setFirstTimeInit(true)
+    }
+
     return () => {
       clearTimeout(alertTimer);
       clearTimeout(loadingTimer);
     };
-  }, [alertShow, isLoading]
+  }, [alertShow, isLoading, isRequestFailed]
   );
 
   const isEditing = (record) => record.key === editingKey;

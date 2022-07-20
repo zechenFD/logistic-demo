@@ -14,5 +14,5 @@ export const OpenMessage = (loadText, loadSuccessText) => {
       key,
       duration: 2,
     });
-  }, 1000);
+  }, 2000);
 };
