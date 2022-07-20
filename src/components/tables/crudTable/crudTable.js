@@ -20,6 +20,8 @@ import {
 } from "@ant-design/icons";
 import API from "../../../api";
 import OperationalForms from "../../forms/basicform";
+import addressesJson from '../../../mockAPI/addresses.json';
+import { OpenMessage } from '../../messages/messages';
 
 import './crudTable.less'
 
@@ -42,6 +44,8 @@ const CrudTable = () => {
       })
       .catch((error) => {
         console.log(error);
+        setDataSource(addressesJson.addresses.slice(0, 15));
+        OpenMessage('API is failed, the mock data has been initialized', 'Mock data load successfully!');
       });
   };
 

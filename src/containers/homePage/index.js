@@ -6,7 +6,7 @@ import { getSampleTableData, selectHomeData, addData, editData, filterData, sort
 const HomePage = () => {
     const homeData = useSelector(selectHomeData);
     const dispatch = useDispatch();
-    const { data, isLoading, filteredInfo, sortedInfo, editingKey } = homeData;
+    const { data, isLoading, isRequestFailed, filteredInfo, sortedInfo, editingKey } = homeData;
 
     const hiddenColumns = ['key', 'age', 'description'];
     const wideColumns = ['address'];
@@ -22,6 +22,7 @@ const HomePage = () => {
 
     return (
         <BasicTable
+            isRequestFailed={isRequestFailed}
             tableTitle='Sample Table'
             tableData={data}
             hiddenColumns={hiddenColumns}

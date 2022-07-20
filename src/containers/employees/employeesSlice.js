@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import employeesInfo from '../../mockAPI/mockEmployeesInfo.json';
 import API from '../../api';
 
 const initialState = {
@@ -6,7 +7,8 @@ const initialState = {
   filteredInfo: {},
   sortedInfo: {},
   editingKey: '',
-  isLoading: true
+  isLoading: true,
+  isRequestFailed: false
 };
 
 
@@ -56,16 +58,28 @@ const employeesInfoSlice = createSlice({
   extraReducers: {
     [getEmployeesInfo.pending]: (state) => {
       state.isLoading = true;
+      state.isRequestFailed = false;
     },
     [getEmployeesInfo.fulfilled]: (state, action) => {
-      state.data = action.payload.map((item, index) => ({
-        ...item,
-        key: index
-      }));
+      if(action.payload){
+        state.data = action.payload.map((item, index) => ({
+          ...item,
+          key: index
+        }));
+        state.isRequestFailed = false;
+      }else{
+        state.data = employeesInfo.employeeInfoList.map((item, index) => ({
+          ...item,
+          key: index
+        }));
+        state.isRequestFailed = true;
+      }
+
       state.isLoading = false;
     },
     [getEmployeesInfo.rejected]: (state) => {
       state.isLoading = false;
+      state.isRequestFailed = true;
     },
   }
 });

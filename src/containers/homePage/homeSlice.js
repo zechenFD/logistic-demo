@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import mockTableData from '../../mockAPI/mocktabledata.json';
 import API from '../../api';
 
 const initialState = {
@@ -6,7 +7,8 @@ const initialState = {
   filteredInfo: {},
   sortedInfo: {},
   editingKey: '',
-  isLoading: true
+  isLoading: true,
+  isRequestFailed: false
 };
 
 export const getSampleTableData = createAsyncThunk("home/getSampleTableData", async () => {
@@ -51,13 +53,22 @@ export const homeSlice = createSlice({
   extraReducers: {
     [getSampleTableData.pending]: (state) => {
       state.isLoading = true;
+      state.isRequestFailed = false;
     },
     [getSampleTableData.fulfilled]: (state, action) => {
-      state.data = action.payload;
+      if(action.payload){
+        state.data = action.payload;
+        state.isRequestFailed = false;
+      }else{
+        state.data = mockTableData.mocktabledata;
+        state.isRequestFailed = true;
+      }
+      
       state.isLoading = false;
     },
     [getSampleTableData.rejected]: (state) => {
       state.isLoading = false;
+      state.isRequestFailed = false;
     },
   }
 });

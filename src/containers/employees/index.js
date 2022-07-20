@@ -6,7 +6,7 @@ import { getEmployeesInfo, selectEmployeesInfo, addData, editData, filterData, s
 const EmployeesPage = () => {
     const employeesInfo = useSelector(selectEmployeesInfo);
     const dispatch = useDispatch();
-    const { data, isLoading, filteredInfo, sortedInfo, editingKey } = employeesInfo;
+    const { data, isLoading, isRequestFailed, filteredInfo, sortedInfo, editingKey } = employeesInfo;
     const hiddenColumns = ['key', 'warnings', 'errors', 'debug', 'notice'];
     const wideColumns = ['employeeDistributionEmail', 'fullName'];
     const narrowColumns = ['status', 'errorCode']
@@ -21,6 +21,7 @@ const EmployeesPage = () => {
 
     return (
         <BasicTable
+            isRequestFailed={isRequestFailed}
             tableTitle='Employees Info'
             tableData={data}
             hiddenColumns={hiddenColumns}

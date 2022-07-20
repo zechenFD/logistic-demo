@@ -11,7 +11,7 @@ import { autoTable } from 'jspdf-autotable';
 
 import { capitalizeFirstLetter } from '../../../utilities/common';
 import LogisticAlert from '../../alerts/logisticAlert';
-// import { OpenMessage } from '../../messages/messages';
+import { OpenMessage } from '../../messages/messages';
 import { TableSpin } from '../../loading/tableSpin'
 import './table.less';
 
@@ -51,6 +51,7 @@ const EditableCell = ({
 };
 
 const BasicTable = ({
+  isRequestFailed,
   tableData,
   tableTitle,
   hiddenColumns,
@@ -83,7 +84,9 @@ const BasicTable = ({
     setIsLoading(false)
   }, 1000);
 
-
+  if(isRequestFailed){
+    OpenMessage('API is failed, the mock data has been initialized', 'Mock data load successfully!');
+  }
 
   useEffect(() => {
     let alertTimer = setTimeout(() => {
@@ -147,8 +150,6 @@ const BasicTable = ({
       setData(newData);
       setEditingKey('');
       setIsLoading(true);
-      // OpenMessage('Updating', 'Update Successfully!');
-
     } catch (errInfo) {
       console.log('Validate Failed:', errInfo);
     }
@@ -196,7 +197,6 @@ const BasicTable = ({
 
     setData(newData);
     setIsLoading(true);
-    // OpenMessage('Deleting', 'Delete Successfully!');
   };
 
   const handleSearchEvent = (selectedKeys, confirm, dataIndex) => {
