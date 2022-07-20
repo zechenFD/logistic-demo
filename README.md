@@ -1,6 +1,8 @@
 # logistic-demo
 
-demo for logistic proof and concepts
+demo url : https://zechenfd.github.io/logistic-demo/
+
+This demo is for logistic proof and concepts
 
 
 ### env setup
